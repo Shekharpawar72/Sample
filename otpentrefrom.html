@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Entry Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 450px;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 14px;
+            animation: fadeIn 1s ease-out;
+        }
+        .phone-display {
+            text-align: center;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 600;
+        }
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s;
+            animation: popIn 0.5s ease-out;
+        }
+        .otp-input:nth-child(1) { animation-delay: 0.1s; }
+        .otp-input:nth-child(2) { animation-delay: 0.2s; }
+        .otp-input:nth-child(3) { animation-delay: 0.3s; }
+        .otp-input:nth-child(4) { animation-delay: 0.4s; }
+        .otp-input:nth-child(5) { animation-delay: 0.5s; }
+        .otp-input:nth-child(6) { animation-delay: 0.6s; }
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+            background-color: #f0f4ff;
+        }
+        .otp-input:hover {
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: fadeIn 1.2s ease-out;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .resend-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .resend-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .resend-link a:hover {
+            color: #764ba2;
+        }
+        .resend-link a:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .timer {
+            text-align: center;
+            color: #e74c3c;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .error-msg {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+        }
+        .success-msg {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Verify Your Account</h1>
+        <p class="subtitle">Enter the 6-digit OTP sent to your phone</p>
+        <div class="phone-display" id="phoneDisplay"></div>
+        
+        <form id="otpForm">
+            <div class="form-group">
+                <label for="otp">OTP Code</label>
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                    <input type="text" class="otp-input" maxlength="1" required>
+                </div>
+            </div>
+            <button type="submit">Verify OTP</button>
+            <div class="error-msg" id="errorMsg"></div>
+            <div class="success-msg" id="successMsg"></div>
+        </form>
+        
+        <div class="resend-link">
+            Didn't receive code? <a onclick="resendOTP()" id="resendLink">Resend OTP</a>
+        </div>
+        <div class="timer" id="timer"></div>
+    </div>
+
+    <script>
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const otpForm = document.getElementById('otpForm');
+        const phoneDisplay = document.getElementById('phoneDisplay');
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+        const resendLink = document.getElementById('resendLink');
+        let timeLeft = 60;
+        let timerInterval;
+
+        // Get stored data from sessionStorage
+        const storedOTP = sessionStorage.getItem('generatedOTP');
+        const storedPhone = sessionStorage.getItem('phoneNumber');
+
+        if (!storedPhone) {
+            window.location.href = 'index.html';
+        }
+
+        // Display masked phone number
+        phoneDisplay.textContent = `OTP sent to +91-${storedPhone.slice(-4).padStart(10, '*')}`;
+
+        // Auto-focus next input
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            input.addEventListener('paste', (e) => {
+                const pastedData = e.clipboardData.getData('text');
+                if (pastedData.length === 6) {
+                    otpInputs.forEach((inp, i) => {
+                        inp.value = pastedData[i];
+                    });
+                    otpInputs[5].focus();
+                }
+                e.preventDefault();
+            });
+        });
+
+        otpForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (enteredOTP === storedOTP) {
+                successMsg.textContent = 'OTP Verified Successfully!';
+                successMsg.style.display = 'block';
+                errorMsg.style.display = 'none';
+                setTimeout(() => {
+                    alert('Account verified! Redirecting...');
+                    sessionStorage.clear();
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                errorMsg.textContent = 'Invalid OTP. Please try again.';
+                errorMsg.style.display = 'block';
+                successMsg.style.display = 'none';
+                otpInputs.forEach(input => input.value = '');
+                otpInputs[0].focus();
+            }
+        });
+
+        // Timer function
+        function startTimer() {
+            timeLeft = 60;
+            resendLink.style.pointerEvents = 'none';
+            resendLink.style.opacity = '0.5';
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = `Resend OTP in ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('timer').textContent = 'OTP Expired';
+                    resendLink.style.pointerEvents = 'auto';
+                    resendLink.style.opacity = '1';
+                }
+            }, 1000);
+        }
+
+        function resendOTP() {
+            const newOTP = Math.floor(100000 + Math.random() * 900000).toString();
+            sessionStorage.setItem('generatedOTP', newOTP);
+            console.log('New OTP:', newOTP); // For testing
+            alert('New OTP sent to ' + storedPhone);
+            otpInputs.forEach(input => input.value = '');
+            otpInputs[0].focus();
+            startTimer();
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>

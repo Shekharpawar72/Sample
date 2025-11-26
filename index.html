@@ -6,7 +6,7 @@
     <title>OTP Verification</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -21,11 +21,23 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-out;
         }
         .form-group {
             margin-bottom: 20px;
@@ -60,9 +72,34 @@
             font-weight: bold;
             cursor: pointer;
             transition: background 0.3s;
+            animation: fadeIn 1s ease-out;
         }
         button:hover {
             background: #764ba2;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-msg {
+            color: #27ae60;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
  </head>
@@ -72,18 +109,61 @@
         <form id="otpForm">
             <div class="form-group">
                 <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number (10 digits)" required pattern="[0-9]{10}">
+                <div class="error-msg" id="phoneError">Please enter a valid 10-digit phone number</div>
             </div>
-            <button type="submit">Send OTP</button>
+            <button type="submit" id="sendBtn">Send OTP</button>
+            <div class="success-msg" id="successMsg">OTP sent successfully!</div>
         </form>
     </div>
 
     <script>
-        document.getElementById('otpForm').addEventListener('submit', function(e) {
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
+        const successMsg = document.getElementById('successMsg');
+        const sendBtn = document.getElementById('sendBtn');
+        const otpForm = document.getElementById('otpForm');
+
+        // Phone validation
+        phoneInput.addEventListener('blur', function() {
+            if (this.value.length !== 10 || isNaN(this.value)) {
+                phoneError.style.display = 'block';
+            } else {
+                phoneError.style.display = 'none';
+            }
+        });
+
+        // Generate random OTP
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        otpForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const phone = document.getElementById('phone').value;
+            const phone = phoneInput.value;
+
+            if (phone.length !== 10 || isNaN(phone)) {
+                phoneError.style.display = 'block';
+                return;
+            }
+
+            const otp = generateOTP();
+            
+            // Store OTP and phone in sessionStorage
+            sessionStorage.setItem('generatedOTP', otp);
+            sessionStorage.setItem('phoneNumber', phone);
+            
+            // Simulate sending OTP (in real app, this would call a backend API)
             console.log('OTP sent to:', phone);
-            alert('OTP sent to ' + phone);
+            console.log('Generated OTP:', otp); // For testing purposes
+            
+            successMsg.style.display = 'block';
+            sendBtn.disabled = true;
+            
+            // Redirect to OTP entry page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'otpentrefrom.html';
+            }, 2000);
         });
     </script>
  </body>
